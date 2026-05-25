@@ -1,10 +1,17 @@
 @Library('shared-lib@master') _
+
 pipeline {
     agent any
 
     stages {
 
-        stage('Build Java') {
+        stage('Checkout') {
+            steps {
+                git url: 'https://github.com/abdelazizhedeia/java-app', branch: 'master'
+            }
+        }
+
+        stage('Build') {
             steps {
                 buildJavaApp()
             }
@@ -12,7 +19,7 @@ pipeline {
 
         stage('Docker Build') {
             steps {
-                dockerBuild("java-app", "v1")
+                buildDockerImage()
             }
         }
     }
