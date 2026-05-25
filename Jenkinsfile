@@ -38,18 +38,6 @@ pipeline {
                 sh 'docker build -t java-app:v1 .'
             }
         }
-
-        stage('Docker Login') {
-            steps {
-                sh 'echo $dockerPassword | docker login -u $dockerUsername --password-stdin'
-            }
-        }
-
-        stage('Push Docker Image') {
-            steps {
-                sh 'docker tag java-app:v1 $dockerUsername/java-app:v1'
-                sh 'docker push $dockerUsername/java-app:v1'
-            }
         }
     }
 }
