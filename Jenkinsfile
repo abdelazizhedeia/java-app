@@ -1,47 +1,19 @@
-@Library('shared-lib') _
+@Library('my-shared-lib') _
 
 pipeline {
-    agent {
-        label 'jenkins-agent'
-    }
-
-    tools {
-        jdk 'jdk:11'
-        maven 'maven-354'
-    }
-
-    environment {
-        dockerUsername = credentials('dockerusername')
-        dockerPassword = credentials('dockerpassword')
-    }
+    agent any
 
     stages {
 
-       
-
-        stage('Test Java App') {
+        stage('Build Java') {
             steps {
-                sh 'mvn test'
+                buildJavaApp()
             }
         }
 
-        stage('Archive Java App') {
+        stage('Docker Build') {
             steps {
-                archiveArtifacts artifacts: '**/*.jar', followSymlinks: false
-            }
-        }
-
-    
-                stage('Docker Login') {
-            steps {
-                sh 'echo $dockerPassword | docker login -u $dockerUsername --password-stdin'
-            }
-        }
-
-        stage('Push Docker Image') {
-            steps {
-                sh 'docker tag java-app:v1 $dockerUsername/java-app:v1'
-                sh 'docker push $dockerUsername/java-app:v1'
+                dockerBuild("java-app", "v1")
             }
         }
     }
