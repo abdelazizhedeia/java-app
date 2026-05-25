@@ -1,3 +1,5 @@
+@Library('shared-lib') _
+
 pipeline {
     agent {
         label 'jenkins-agent'
@@ -15,11 +17,7 @@ pipeline {
 
     stages {
 
-        stage('Build Java App') {
-            steps {
-                sh 'mvn clean package -DskipTests'
-            }
-        }
+       
 
         stage('Test Java App') {
             steps {
@@ -33,11 +31,7 @@ pipeline {
             }
         }
 
-        stage('Build Docker Image') {
-            steps {
-                sh 'docker build -t java-app:v1 .'
-            }
-        }
+    
                 stage('Docker Login') {
             steps {
                 sh 'echo $dockerPassword | docker login -u $dockerUsername --password-stdin'
